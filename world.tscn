@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://d4gulg6v4fqph"]
+
+[ext_resource type="Script" path="res://world.gd" id="1_nchqw"]
+[ext_resource type="Texture2D" uid="uid://dgf6pbl843ul8" path="res://assets/background.png" id="1_pswn4"]
+[ext_resource type="PackedScene" uid="uid://bc2w0j10kxoie" path="res://player.tscn" id="2_4lrft"]
+[ext_resource type="PackedScene" uid="uid://coxxbwkoslrb1" path="res://ground.tscn" id="3_p63k7"]
+[ext_resource type="PackedScene" uid="uid://c8wew64vutudu" path="res://pipe_spawner.tscn" id="4_lhyaw"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_nchqw")
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 144.0
+offset_bottom = 256.0
+texture = ExtResource("1_pswn4")
+
+[node name="Player" parent="." instance=ExtResource("2_4lrft")]
+position = Vector2(74, 124)
+
+[node name="PipeSpawner" parent="." instance=ExtResource("4_lhyaw")]
+position = Vector2(147, 128)
+
+[node name="Ground" parent="." instance=ExtResource("3_p63k7")]
+position = Vector2(72, 228)
+
+[node name="Label" type="Label" parent="."]
+z_index = 15
+offset_left = 56.0
+offset_top = 8.0
+offset_right = 96.0
+offset_bottom = 31.0
+text = "0"
+horizontal_alignment = 1

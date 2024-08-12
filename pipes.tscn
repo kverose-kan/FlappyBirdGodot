@@ -1,0 +1,81 @@
+[gd_scene load_steps=7 format=3 uid="uid://dmtsidvtixv07"]
+
+[ext_resource type="Texture2D" uid="uid://c0dwkcqwfr5p0" path="res://assets/topPipe.png" id="1_valos"]
+[ext_resource type="Texture2D" uid="uid://bfvxn42t7sl4p" path="res://assets/bottomPipe.png" id="2_lslf6"]
+
+[sub_resource type="GDScript" id="GDScript_iwnjb"]
+script/source = "extends Node2D
+@onready var visible_on_screen_notifier_2d = $VisibleOnScreenNotifier2D
+@onready var passbox = $Passbox
+
+var moving = true
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	Events.playerDead.connect(_on_player_death)
+	pass
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if moving == true:
+		move_local_x(-0.8)
+
+func _on_visible_on_screen_notifier_2d_screen_exited():
+	queue_free()
+
+func _on_player_death():
+	moving = false
+	remove_child($Passbox)
+	
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i6ldb"]
+size = Vector2(24, 135)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kpluq"]
+size = Vector2(24, 121.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xwudh"]
+size = Vector2(4, 57)
+
+[node name="Pipes" type="Node2D"]
+z_index = 5
+script = SubResource("GDScript_iwnjb")
+
+[node name="TopSprite" type="Sprite2D" parent="."]
+position = Vector2(0, -96)
+texture = ExtResource("1_valos")
+
+[node name="hurtbox" type="Area2D" parent="." groups=["Hurtbox"]]
+collision_layer = 2
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="hurtbox"]
+position = Vector2(0, -96.5)
+shape = SubResource("RectangleShape2D_i6ldb")
+
+[node name="BottomSprite" type="Sprite2D" parent="."]
+position = Vector2(0, 88)
+texture = ExtResource("2_lslf6")
+
+[node name="hurtbox2" type="Area2D" parent="." groups=["Hurtbox"]]
+collision_layer = 2
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="hurtbox2"]
+position = Vector2(0, 88.25)
+shape = SubResource("RectangleShape2D_kpluq")
+
+[node name="Passbox" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Passbox"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_xwudh")
+debug_color = Color(0.981607, 0, 0.369579, 0.42)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(5, -1)
+
+[connection signal="area_entered" from="hurtbox" to="." method="_on_hurtbox_area_entered"]
+[connection signal="area_entered" from="hurtbox2" to="." method="_on_hurtbox_area_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

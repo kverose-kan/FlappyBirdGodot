@@ -1,0 +1,204 @@
+[gd_scene load_steps=18 format=3 uid="uid://bc2w0j10kxoie"]
+
+[ext_resource type="Script" path="res://CharacterBody2D.gd" id="1_ahjfw"]
+[ext_resource type="Texture2D" uid="uid://c66wutlw4ijj2" path="res://assets/birdSprites.png" id="2_u21e7"]
+[ext_resource type="AudioStream" uid="uid://c3vlu1a14q61d" path="res://assets/sounds/sfx_die.wav" id="3_hkrlw"]
+[ext_resource type="AudioStream" uid="uid://cfy053t8lis3l" path="res://assets/sounds/sfx_wing.wav" id="3_qqnwp"]
+[ext_resource type="AudioStream" uid="uid://t381fv6gdpjg" path="res://assets/sounds/sfx_hit.wav" id="4_vjino"]
+[ext_resource type="AudioStream" uid="uid://dsef8821vrqpg" path="res://assets/sounds/sfx_point.wav" id="5_7ugnc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tg1qt"]
+atlas = ExtResource("2_u21e7")
+region = Rect2(38, 0, 19, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ux30u"]
+atlas = ExtResource("2_u21e7")
+region = Rect2(19, 0, 19, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hpoxt"]
+atlas = ExtResource("2_u21e7")
+region = Rect2(38, 0, 19, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xtosx"]
+atlas = ExtResource("2_u21e7")
+region = Rect2(0, 0, 19, 14)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lbeek"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tg1qt")
+}],
+"loop": true,
+"name": &"fall",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ux30u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hpoxt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xtosx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hpoxt")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_cri8o"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AnimatedSprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_j5xrw"]
+resource_name = "fall"
+length = 0.5
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [-0.436332, 0.0, 1.5708]
+}
+
+[sub_resource type="Animation" id="Animation_2smyw"]
+resource_name = "flap"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -0.523599]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AnimatedSprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8rcsh"]
+_data = {
+"RESET": SubResource("Animation_cri8o"),
+"fall": SubResource("Animation_j5xrw"),
+"flap": SubResource("Animation_2smyw")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_juxen"]
+size = Vector2(16, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i0rrt"]
+size = Vector2(16, 10)
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 6
+motion_mode = 1
+script = ExtResource("1_ahjfw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = 7
+sprite_frames = SubResource("SpriteFrames_lbeek")
+animation = &"idle"
+frame = 1
+speed_scale = 10.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite2D"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_8rcsh")
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_juxen")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_mask = 6
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("RectangleShape2D_i0rrt")
+debug_color = Color(0.96206, 2.11775e-06, 0.506767, 0.42)
+
+[node name="OofSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_hkrlw")
+
+[node name="FlapSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_qqnwp")
+
+[node name="HitSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_vjino")
+
+[node name="PointSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_7ugnc")
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+[connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]
